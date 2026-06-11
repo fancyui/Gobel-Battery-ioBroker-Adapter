@@ -1,0 +1,93 @@
+{
+  "common": {
+    "name": "gobel-battery",
+    "version": "1.0.0",
+    "news": {
+      "1.0.0": {
+        "en": "initial release",
+        "zh-cn": "初始版本",
+        "de": "Erstveröffentlichung"
+      }
+    },
+    "title": "Gobel Battery Monitor",
+    "titleLang": {
+      "en": "Gobel Battery Monitor",
+      "zh-cn": "Gobel 电池监控",
+      "de": "Gobel Batteriemonitor"
+    },
+    "desc": {
+      "en": "Gobel Power Battery Monitor adapter for PACE, JKBMS, and TDT BMS",
+      "zh-cn": "适用于 PACE、JKBMS 和 TDT BMS 的 Gobel Power 电池监控适配器",
+      "de": "Gobel Power Batteriemonitor-Adapter für PACE, JKBMS und TDT BMS"
+    },
+    "authors": [
+      "fancyui"
+    ],
+    "keywords": [
+      "gobel",
+      "battery",
+      "bms",
+      "pace",
+      "jkbms",
+      "tdt",
+      "solar"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "gobel-battery.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/fancyui/Gobel-Battery-ioBroker-Adapter/master/admin/gobel-battery.png",
+    "readme": "https://github.com/fancyui/Gobel-Battery-ioBroker-Adapter/blob/master/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "energy",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "dependencies": [
+      {
+        "js-controller": ">=3.0.0"
+      }
+    ],
+    "materialize": true,
+    "jsonConfig": true
+  },
+  "native": {
+    "connectionType": "serial",
+    "batteryPort": "rs232",
+    "bmsType": "PACE_LV",
+    "serialPort": "/dev/ttyUSB0",
+    "baudRate": 115200,
+    "ipAddress": "10.0.0.5",
+    "ipPort": 8899,
+    "refreshInterval": 5,
+    "maxParallel": 16,
+    "jkDisplayIndexStart": "01",
+    "debug": false
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "BMS connection status",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
+}

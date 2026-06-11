@@ -1,0 +1,15 @@
+{
+  "Connection Settings": "连接设置",
+  "Connection Type": "连接类型",
+  "BMS Type": "BMS 类型",
+  "BMS Interface Port": "BMS 接口端口",
+  "Serial Port Path": "串口路径",
+  "Baud Rate": "波特率",
+  "IP Address": "IP 地址",
+  "IP Port": "IP 端口",
+  "BMS & Scan Options": "BMS 与扫描选项",
+  "Data Refresh Interval (seconds)": "数据刷新间隔 (秒)",
+  "Max Parallel Packs Scanned": "允许的最大并联电池组数",
+  "JK BMS Display Index Start": "JK BMS 显示索引开始方式",
+  "Enable Debug Mode": "启用调试模式"
+}
