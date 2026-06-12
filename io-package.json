@@ -1,12 +1,12 @@
 {
   "common": {
     "name": "gobel-battery",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "news": {
-      "1.0.0": {
-        "en": "initial release",
-        "zh-cn": "初始版本",
-        "de": "Erstveröffentlichung"
+      "1.0.3": {
+        "en": "auto download pyserial",
+        "zh-cn": "自动下载 pyserial",
+        "de": "pyserial automatisch herunterladen"
       }
     },
     "title": "Gobel Battery Monitor",

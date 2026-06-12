@@ -67,8 +67,8 @@ class GobelBattery extends utils.Adapter {
             this.log.info('Python command not in system PATH. Scanning Windows Registry & directories...');
             try {
                 const registryPath = await this.findPythonInRegistry();
-                if (registryPath) {
-                    this.log.info(`Found Python in Windows Registry: "${registryPath}"`);
+                if (registryPath && await this.checkCommandAvailable(registryPath)) {
+                    this.log.info(`Found functional Python in Windows Registry: "${registryPath}"`);
                     return registryPath;
                 }
             } catch (err) {
@@ -77,8 +77,8 @@ class GobelBattery extends utils.Adapter {
 
             try {
                 const directoryPath = await this.findPythonInCommonDirectories();
-                if (directoryPath) {
-                    this.log.info(`Found Python in common directory: "${directoryPath}"`);
+                if (directoryPath && await this.checkCommandAvailable(directoryPath)) {
+                    this.log.info(`Found functional Python in common directory: "${directoryPath}"`);
                     return directoryPath;
                 }
             } catch (err) {
@@ -168,6 +168,38 @@ class GobelBattery extends utils.Adapter {
     }
 
     /**
+     * Gets the latest pyserial wheel URL from PyPI JSON API.
+     * @returns {Promise<string>}
+     */
+    getPyserialUrl() {
+        return new Promise((resolve, reject) => {
+            https.get('https://pypi.org/pypi/pyserial/json', (res) => {
+                if (res.statusCode !== 200) {
+                    reject(new Error(`PyPI API returned status code ${res.statusCode}`));
+                    return;
+                }
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                    try {
+                        const json = JSON.parse(data);
+                        const wheel = json.urls.find(item => item.filename && item.filename.endsWith('.whl'));
+                        if (wheel && wheel.url) {
+                            resolve(wheel.url);
+                        } else {
+                            reject(new Error('Could not find pyserial wheel file in PyPI response'));
+                        }
+                    } catch (e) {
+                        reject(e);
+                    }
+                });
+            }).on('error', (err) => {
+                reject(err);
+            });
+        });
+    }
+
+    /**
      * Downloads and sets up the portable Python environment and pyserial.
      * @returns {Promise<string>} Path to the downloaded python.exe
      */
@@ -185,7 +217,15 @@ class GobelBattery extends utils.Adapter {
 
         const arch = process.arch === 'x64' ? 'amd64' : 'win32';
         const pythonUrl = `https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-${arch}.zip`;
-        const pyserialUrl = 'https://files.pythonhosted.org/packages/07/55/a79057a27f058562bb3207923c6e26b9e3a9b66107beca9cf0b741003cc2/pyserial-3.5-py2.py3-none-any.whl';
+        
+        let pyserialUrl = '';
+        try {
+            this.log.info('Fetching latest pyserial release URL from PyPI...');
+            pyserialUrl = await this.getPyserialUrl();
+        } catch (e) {
+            this.log.warn(`Failed to fetch pyserial URL from PyPI API: ${e.message}. Falling back to default URL.`);
+            pyserialUrl = 'https://files.pythonhosted.org/packages/07/bc/587a445451b253b285629263eb51c2d8e9bcea4fc97826266d186f96f558/pyserial-3.5-py2.py3-none-any.whl';
+        }
 
         const tempDir = path.join(__dirname, 'python-temp');
         if (!fs.existsSync(tempDir)) {
@@ -193,7 +233,7 @@ class GobelBattery extends utils.Adapter {
         }
 
         const pythonZip = path.join(tempDir, 'python-embed.zip');
-        const pyserialZip = path.join(tempDir, 'pyserial.whl');
+        const pyserialZip = path.join(tempDir, 'pyserial.zip');
 
         try {
             // 1. Download Python embeddable zip
@@ -206,7 +246,7 @@ class GobelBattery extends utils.Adapter {
             this.log.info('Python extracted successfully.');
 
             // 3. Download pyserial wheel
-            this.log.info('Downloading pyserial library from PyPI...');
+            this.log.info(`Downloading pyserial library from PyPI: ${pyserialUrl}`);
             await this.downloadFile(pyserialUrl, pyserialZip);
             this.log.info('Pyserial downloaded successfully. Extracting to local libraries...');
 
@@ -250,14 +290,16 @@ class GobelBattery extends utils.Adapter {
     }
 
     /**
-     * Checks if a command can be executed without error (not throwing ENOENT)
+     * Checks if a command can be executed without error (not throwing ENOENT) and has pyserial available
      * @param {string} cmd 
      * @returns {Promise<boolean>}
      */
     checkCommandAvailable(cmd) {
         return new Promise((resolve) => {
             try {
-                const p = spawn(cmd, ['-V']);
+                const libPath = path.join(__dirname, 'lib').replace(/\\/g, '/').replace(/'/g, "\\'");
+                const checkScript = `import sys; sys.path.insert(0, '${libPath}'); import serial`;
+                const p = spawn(cmd, ['-c', checkScript]);
                 p.on('error', () => {
                     resolve(false);
                 });
@@ -270,7 +312,7 @@ class GobelBattery extends utils.Adapter {
                 const timeout = setTimeout(() => {
                     try { p.kill(); } catch (e) {}
                     resolve(false);
-                }, 1000);
+                }, 2000);
                 p.on('exit', () => clearTimeout(timeout));
             } catch (e) {
                 resolve(false);
