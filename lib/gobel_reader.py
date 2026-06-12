@@ -5,8 +5,8 @@ import json
 import time
 import logging
 
-# Add the current folder to import path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Add the current folder to the front of the import path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from bms_comm import BMSCommunication
 from pacebms_rs232 import PACEBMS232
