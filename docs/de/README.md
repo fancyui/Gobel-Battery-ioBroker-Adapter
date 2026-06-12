@@ -43,7 +43,7 @@ Installieren Sie den Adapter während der Entwicklungs- oder Erstveröffentlichu
 ## Konfiguration
 Konfigurieren Sie die folgenden Optionen im Admin-Panel des Adapters:
 1. **Verbindungstyp**: Wählen Sie `Serial (USB)`, `WiFi` oder `Ethernet`.
-2. **BMS-Typ**: Wählen Sie `PACE_LV`, `JK_PB`, `TDT` oder `PACE_LV_WIFI`.
+2. **BMS-Typ**: Wählen Sie `PACE_LV`, `JK_PB`, `TDT` oder `PACE_LV_WIFI`. (Hinweis: `PACE_LV_WIFI` ist nur für Gobel Power-Batterien mit WLAN-Schnittstelle gedacht).
 3. **BMS-Schnittstellenanschluss**: Wählen Sie `RS232` oder `RS485`.
 4. **Pfad des seriellen Anschlusses** (nur Seriell): `/dev/ttyUSB0` unter Linux oder `COM3` unter Windows.
 5. **Baudrate**: Typischerweise `115200` (Pace/JK) oder `9600`.

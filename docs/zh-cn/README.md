@@ -43,7 +43,7 @@
 ## 配置项
 在适配器管理面板中配置以下选项：
 1. **连接类型 (Connection Type)**：选择 `Serial (USB)`、`WiFi` 或 `Ethernet`。
-2. **BMS 类型 (BMS Type)**：选择 `PACE_LV`、`JK_PB`、`TDT` 或 `PACE_LV_WIFI`。
+2. **BMS 类型 (BMS Type)**：选择 `PACE_LV`、`JK_PB`、`TDT` 或 `PACE_LV_WIFI`。（注意：`PACE_LV_WIFI` 仅用于 Gobel Power 自带 WIFI 接口的电池）。
 3. **BMS 接口类型 (BMS Interface Port)**：选择 `RS232` 或 `RS485`。
 4. **串口路径 (Serial Port Path)**（仅限串口）：Linux 上为 `/dev/ttyUSB0`，Windows 上为 `COM3`。
 5. **波特率 (Baud Rate)**：通常为 `115200`（Pace/JK）或 `9600`。

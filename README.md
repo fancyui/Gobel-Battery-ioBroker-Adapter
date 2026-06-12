@@ -57,7 +57,7 @@ During the initial release or development phase, install it directly from GitHub
 ## Configuration
 Configure the following options in the adapter admin panel:
 1. **Connection Type**: Select `Serial (USB)`, `WiFi` or `Ethernet`.
-2. **BMS Type**: Select `PACE_LV`, `JK_PB`, `TDT`, or `PACE_LV_WIFI`.
+2. **BMS Type**: Select `PACE_LV`, `JK_PB`, `TDT`, or `PACE_LV_WIFI`. (Note: `PACE_LV_WIFI` is only for Gobel Power batteries equipped with a WiFi interface).
 3. **BMS Interface Port**: Choose `RS232` or `RS485`.
 4. **Serial Port Path** (Serial only): `/dev/ttyUSB0` on Linux or `COM3` on Windows.
 5. **Baud Rate**: Typically `115200` (Pace/JK) or `9600`.
