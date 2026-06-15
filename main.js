@@ -805,7 +805,7 @@ class GobelBmsMonitor extends utils.Adapter {
                     await this.setStateAsync(stateId, subVal, true);
                 }
             } else if (key !== 'cell_number' && key !== 'temp_sensor_number') {
-                // Flat warning values (could be string like 'normal', or number like balance_state_1)
+                // Flat warning values (could be string like 'normal', or number like balancing_status_passive_1)
                 const folderId = `${packId}.warnings`;
                 await this.setObjectNotExistsAsync(folderId, {
                     type: 'folder',
